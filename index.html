@@ -1,0 +1,67 @@
+<!doctype html>
+<html ng-app="performanceApp">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1 user-scalable=no">
+    <meta name="author" content="Katarina Juliana Blagojevic">
+    <meta name="description" content="A webpage performance showdown">
+    <meta name="keywords" content="web performance, web development, site speed, page speed, HTML, CSS, JS, JavaScript, front-end, frontend">
+    <title>Quick Draw</title>
+    <link href='http://fonts.googleapis.com/css?family=Rye|Raleway:400,700' rel='stylesheet' type='text/css'>
+    <link href="style.css" rel="stylesheet" type="text/css">
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.2/angular.min.js"></script>
+    <script src="app.js"></script>
+    <link rel="icon" href="favicon.ico">
+  </head>
+  <body>
+    <h2 class="accent-font title">Quick Draw</h2>
+    <h4 class="title">A webpage performance showdown.</h4>
+    
+    <div ng-controller="SitesCtrl" class="content">
+      <form name="form" ng-submit="runTests()" ng-show="!showResults">
+        <div ng-repeat="site in sites" class="form-group">
+          <label ng-class="{'accent-color': site.mine}">{{ site.mine ? 'My Site' : 'A Competitor' }}</label>
+          <input ng-model="site.URL" type="text" placeholder="URL" ng-class="{'accent-color': site.mine}" class="textfield" />
+        </div>
+        
+        <div new-competitor-button class="button" ng-show="sites.length < 10">Add a Competitor.</div>        
+        <input class="accent-color button" type="submit" value="OK, I'm ready to compare!" />
+      </form>
+      
+      <img ng-show="!showResults" src="http://media.giphy.com/media/ZLe1gC4bRiGFa/giphy.gif" />
+      
+      <div ng-controller="ResultsCtrl" ng-show="showResults" class="results">
+        <div class="accent-color toggle">
+          <span ng-click="showCached = false" ng-class="{'active': !showCached}" class="toggle-tab">First Time View (uncached assets)</span>
+          <span ng-click="showCached = true" ng-class="{'active': showCached}"class="toggle-tab">Repeat View (cached assets)</span>
+        </div>
+        
+        <div ng-show="!showCached" class="uncached-graphs">
+          <div ng-repeat="(metric, data) in uncachedResults" ng-class="{'show-text': showText}" ng-click="showText = !showText" class="graph">
+            <div class="title">{{ metric }}</div>
+            <div ng-show="result.value" ng-repeat="result in data.results" ng-style="{'width': result.value / $parent.data.max * 100 + '%', 'background-color': result.color}" class="bar">
+              <span class="url">{{ result.url }}</span>
+              <span class="number">{{ result.value }}</span>
+            </div>
+          </div>
+        </div>
+        
+        <div ng-show="showCached" class="cached-graphs">
+          <div ng-repeat="(metric, data) in cachedResults" ng-class="{'show-text': showText}" ng-click="showText = !showText" class="graph">
+            <div class="title">{{ metric }}</div>
+            <div ng-show="result.value" ng-repeat="result in data.results" ng-style="{'width': result.value / $parent.data.max * 100 + '%', 'background-color': result.color}" class="bar">
+              <span class="url">{{ result.url }}</span>
+              <span class="number">{{ result.value }}</span>
+            </div>
+          </div>
+        </div>
+        
+        <img src="http://cowboylands.net/blog/wp-content/uploads/2010/11/gunfighter-code-gregory-peck.jpg" />
+      </div>
+    </div>
+    
+    <div class="footer">
+      Built one afternoon by <a class="accent-color" href="https://github.com/katarinajuliana" target="_blank">Katarina</a> in order to utilize the <a class="accent-color" href="http://www.webpagetest.org/" target="_blank">WebPagetest API</a> in a meaningful context.
+    </div>
+  </body>
+</html>

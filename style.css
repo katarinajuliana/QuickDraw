@@ -1,0 +1,148 @@
+* {
+  box-sizing: inherit;
+}
+
+body {
+  box-sizing: border-box;
+  padding: 10px 0 35px;
+  margin: 0;
+}
+
+body, .textfield, .button {
+  font-family: 'Raleway', sans-serif;
+}
+
+img {
+  width: 100%;
+  max-width: 475px;
+  margin: 20px 0;
+}
+
+form {
+  max-width: 370px;
+  padding: 10px;
+  margin: 0 auto;
+  font-size: 14px;
+}
+
+.accent-font {
+  font-family: 'Rye', sans-serif;
+}
+
+.accent-color {
+  color: teal;
+}
+
+.content {
+  padding-top: 20px;
+  text-align: center;
+}
+
+.title {
+  margin: 10px 0;
+  text-align: center;
+  font-weight: bold;
+}
+
+.footer {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  padding: 5px;
+  border-top: 1px solid lightgrey;
+  background-color: white;
+  opacity: 0.8;
+  font-size: 12px;
+}
+
+.form-group {
+  margin-bottom: 5px;
+  text-align: right;
+}
+
+.textfield {
+  width: 90%;
+  max-width: 255px;
+  padding: 5px;
+}
+
+.button {
+  display: inline-block;
+  padding: 5px;
+  margin: 5px 0;
+  border: 1px solid;
+  font-size: 12px;
+  background-color: white;
+  -webkit-appearance: none;
+}
+
+.button:hover {
+  background-color: black;
+  border-color: black;
+  color: white;
+  opacity: 0.8;
+  cursor: pointer;
+}
+
+.button.accent-color:hover {
+  background-color: teal;
+  border-color: teal;
+}
+
+.toggle {
+  width: 90%;
+  max-width: 450px;
+  display: inline-block;
+  border: 1px solid;
+  margin-bottom: 15px;
+  font-size: 12px;
+}
+
+.toggle-tab {
+  width: 50%;
+  float: left;
+  padding: 5px 10px;
+  cursor: pointer;
+}
+
+.toggle-tab.active {
+  color: white;
+  background-color: teal;
+}
+
+.graph {
+  width: 100%;
+  max-width: 350px;
+  padding: 5px;
+  display: inline-block;
+  text-align: left;
+  vertical-align: top;
+}
+
+.bar {
+  padding: 5px;
+  color: white;
+  font-size: 12px;
+  text-align: right;
+}
+
+.bar .url {
+  color: black;
+  font-weight: bold;
+  display:none;
+}
+
+.graph:hover .bar,
+.graph.show-text .bar {
+  text-align: left;
+}
+
+.graph:hover .url,
+.graph.show-text .url {
+  display: block;
+}
+
+.graph:hover .number,
+.graph.show-text .number {
+  display: none;
+}
