@@ -89,6 +89,14 @@ form {
   border-color: teal;
 }
 
+.message-container {
+  display: inline-block;
+  margin-bottom: 30px;
+  padding: 5px 10px;
+  border: 1px dashed brown;
+  border-radius: 20px;
+}
+
 .toggle {
   width: 90%;
   max-width: 450px;

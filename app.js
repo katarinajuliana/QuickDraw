@@ -1,8 +1,9 @@
 angular.module('performanceApp', [])
   .controller('SitesCtrl', function($scope, $rootScope, $http, $q, Site) {
     $scope.sites = Site.sites;
+    $scope.errors = [];
     
-    $scope.runTests = function() {
+    $scope.runSiteTests = function() {
       var requests = [];
       
       $scope.sites = $scope.sites.filter(function(site) {
@@ -12,11 +13,10 @@ angular.module('performanceApp', [])
       angular.forEach($scope.sites, function(site, index) {
         var deferred = $q.defer();
         
-        $http.get('http://www.webpagetest.org/runtest.php?f=json&k=A.950ee6c484b020876b5877b5195ea1bf&url=' + site.URL)
-        .success(function(data) {
+        $http.get(Site.testURLBase + site.URL).success(function(data) {
           if (data.statusCode === 400) {
             // WebPageTest couldn't fetch the url
-            $scope.sites.splice(index, 1);
+            $scope.errors.push(site.URL);
           } else {
             $scope.sites[index]['resultID'] = data.data.testId;
           }
@@ -37,52 +37,23 @@ angular.module('performanceApp', [])
       $scope.$apply();
     });
   })
-  .controller('ResultsCtrl', function($scope, $rootScope, $timeout, $http) {    
-    var resultURLBase = 'http://www.webpagetest.org/jsonResult.php?test=',
-        metrics = {
-          'loadTime': { results: [], max: 0 },
-          'TTFB': { results: [], max: 0 },
-          'speedIndex': { results: [], max: 0 },
-          'firstPaint': { results: [], max: 0 },
-          'render': { results: [], max: 0 },
-          'visuallyComplete': { results: [], max: 0 },
-          'domContentLoaded': { results: [], max: 0 },
-          'domComplete': { results: [], max: 0 },
-          'fullyLoaded': { results: [], max: 0 },
-          'requests': { results: [], max: 0 },
-          'images': { results: [], max: 0 },
-          'domElements': { results: [], max: 0 }
-        },
-        metricMap = {
-          'visuallyComplete': 'visualComplete',
-          'domContentLoaded': 'domContentLoadedEventStart',
-          'domComplete': 'loadEventStart',
-          'images': 'image_total'
-        },
-        colors = [
-          'teal',
-          'rosybrown',
-          'darksalmon',
-          'burlywood',
-          'indianred',
-          'thistle',
-          'dimgrey',
-          'steelblue',
-          'mediumturquoise',
-          'darkblue'
-        ];
-    
-    $scope.uncachedResults = angular.copy(metrics);
-    $scope.cachedResults = angular.copy(metrics);
+  .controller('ResultsCtrl', function($scope, $rootScope, $timeout, $http, Result) {
+    $scope.uncachedResults = angular.copy(Result.metrics);
+    $scope.cachedResults = angular.copy(Result.metrics);
+    $scope.waitingFor = [];
     
     $scope.fetchResults = function() {
       var fetchResult = function(resultID) {
-        $http.get(resultURLBase + resultID).success(function(data) {
+        $http.get(Result.URLBase + resultID).success(function(data) {
           if (data.statusCode === 200) {
             $scope.updateStats(data.data.runs[1]);
+            $scope.waitingFor.splice($scope.waitingFor.indexOf(data.data.url), 1);
           }
           else {
-            $timeout(fetchResult(resultID), 5000);
+            $timeout(fetchResult(resultID), 3000);
+            if ($scope.waitingFor.indexOf(data.data.testInfo.url) < 0) {
+              $scope.waitingFor.push(data.data.testInfo.url);
+            }
           }
         });
       };
@@ -94,10 +65,10 @@ angular.module('performanceApp', [])
     
     $scope.updateStats = function(data) {           
       var url = data['firstView']['URL'],
-          color = colors.shift();
+          color = Result.colors.shift();
       
-      angular.forEach(metrics, function(object, metric) {
-        var value = metric == 'requests' ? data['firstView'][metric].length : data['firstView'][metricMap[metric] || metric];
+      angular.forEach(Result.metrics, function(object, metric) {
+        var value = metric == 'requests' ? data['firstView'][metric].length : data['firstView'][Result.metricMap[metric] || metric];
         $scope.uncachedResults[metric]['results'].push({ 
           url: url,
           value: value,
@@ -108,7 +79,7 @@ angular.module('performanceApp', [])
           $scope.uncachedResults[metric].max = value;
         }
         
-        value = metric == 'requests' ? data['repeatView'][metric].length : data['repeatView'][metricMap[metric] || metric];
+        value = metric == 'requests' ? data['repeatView'][metric].length : data['repeatView'][Result.metricMap[metric] || metric];
         $scope.cachedResults[metric]['results'].push({
           url: url,
           value: value,
@@ -122,7 +93,10 @@ angular.module('performanceApp', [])
     };
     
     if (/results/.test(window.location.search)) {
-      $scope.resultIDs = /results=(.*)/.exec(window.location.search)[1].split(',');
+      var resultIDs = /results=(.*)/.exec(window.location.search)[1].split(',');
+      $scope.resultIDs = resultIDs.filter(function(resultID) {
+        return resultID.length;
+      });
       
       $rootScope.showResults = true;
       $scope.fetchResults();
@@ -131,7 +105,9 @@ angular.module('performanceApp', [])
     $scope.$on('showResults', function(e) {
       var newURL;
       
-      $scope.resultIDs = $scope.sites.map(function(site) {
+      $scope.resultIDs = $scope.sites.filter(function(site) {
+        return site.resultID;
+      }).map(function(site) {
         return site.resultID;
       });
       
@@ -154,9 +130,49 @@ angular.module('performanceApp', [])
       addCompetitor: function() {
         service.sites.push(angular.copy(siteTemplate));
         $rootScope.$broadcast('sites.update');
-      }
+      },
+      testURLBase: 'http://www.webpagetest.org/runtest.php?f=json&k=A.950ee6c484b020876b5877b5195ea1bf&url='
     }
-    
+
+    return service;
+  })
+  .service('Result', function() {
+    var service = {
+      URLBase: 'http://www.webpagetest.org/jsonResult.php?test=',
+      metrics: {
+        'loadTime': { results: [], max: 0 },
+        'TTFB': { results: [], max: 0 },
+        'speedIndex': { results: [], max: 0 },
+        'firstPaint': { results: [], max: 0 },
+        'render': { results: [], max: 0 },
+        'visuallyComplete': { results: [], max: 0 },
+        'domContentLoaded': { results: [], max: 0 },
+        'domComplete': { results: [], max: 0 },
+        'fullyLoaded': { results: [], max: 0 },
+        'requests': { results: [], max: 0 },
+        'images': { results: [], max: 0 },
+        'domElements': { results: [], max: 0 }
+      },
+      metricMap: {
+        'visuallyComplete': 'visualComplete',
+        'domContentLoaded': 'domContentLoadedEventStart',
+        'domComplete': 'loadEventStart',
+        'images': 'image_total'
+      },
+      colors: [
+        'teal',
+        'rosybrown',
+        'darksalmon',
+        'burlywood',
+        'indianred',
+        'thistle',
+        'dimgrey',
+        'steelblue',
+        'mediumturquoise',
+        'darkblue'
+      ]
+    }
+
     return service;
   })
   .directive('newCompetitorButton', function(Site) {

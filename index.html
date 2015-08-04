@@ -18,7 +18,7 @@
     <h4 class="title">A webpage performance showdown.</h4>
     
     <div ng-controller="SitesCtrl" class="content">
-      <form name="form" ng-submit="runTests()" ng-show="!showResults">
+      <form name="form" ng-submit="runSiteTests()" ng-show="!showResults">
         <div ng-repeat="site in sites" class="form-group">
           <label ng-class="{'accent-color': site.mine}">{{ site.mine ? 'My Site' : 'A Competitor' }}</label>
           <input ng-model="site.URL" type="text" placeholder="URL" ng-class="{'accent-color': site.mine}" class="textfield" />
@@ -31,6 +31,10 @@
       <img ng-show="!showResults" src="http://media.giphy.com/media/ZLe1gC4bRiGFa/giphy.gif" />
       
       <div ng-controller="ResultsCtrl" ng-show="showResults" class="results">
+        <div ng-show="waitingFor.length || errors.length" class="message-container">
+          <div ng-repeat="url in waitingFor">Waiting for results from {{ url }}</div>
+          <div ng-repeat="url in errors">WebPageTest couldn't get results for {{ url }}</div>
+        </div>
         <div class="accent-color toggle">
           <span ng-click="showCached = false" ng-class="{'active': !showCached}" class="toggle-tab">First Time View (uncached assets)</span>
           <span ng-click="showCached = true" ng-class="{'active': showCached}"class="toggle-tab">Repeat View (cached assets)</span>
