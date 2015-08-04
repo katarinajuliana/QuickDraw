@@ -66,6 +66,11 @@ form {
   padding: 5px;
 }
 
+.test-option {
+  display: block;
+  margin: 10px 0 5px;
+}
+
 .button {
   display: inline-block;
   padding: 5px;

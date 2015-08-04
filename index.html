@@ -23,6 +23,11 @@
           <label ng-class="{'accent-color': site.mine}">{{ site.mine ? 'My Site' : 'A Competitor' }}</label>
           <input ng-model="site.URL" type="text" placeholder="URL" ng-class="{'accent-color': site.mine}" class="textfield" />
         </div>
+
+        <label class="test-option">
+          <input type="checkbox" ng-model="mobile" ng-true-value="1" ng-false-value="0" />
+          Run tests as mobile
+        </label>
         
         <div new-competitor-button class="button" ng-show="sites.length < 10">Add a Competitor.</div>        
         <input class="accent-color button" type="submit" value="OK, I'm ready to compare!" />

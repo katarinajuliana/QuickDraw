@@ -2,6 +2,7 @@ angular.module('performanceApp', [])
   .controller('SitesCtrl', function($scope, $rootScope, $http, $q, Site) {
     $scope.sites = Site.sites;
     $scope.errors = [];
+    $scope.mobile = 0;
     
     $scope.runSiteTests = function() {
       var requests = [];
@@ -13,7 +14,7 @@ angular.module('performanceApp', [])
       angular.forEach($scope.sites, function(site, index) {
         var deferred = $q.defer();
         
-        $http.get(Site.testURLBase + site.URL).success(function(data) {
+        $http.get(Site.testURLBase + site.URL + '&mobile=' + $scope.mobile).success(function(data) {
           if (data.statusCode === 400) {
             // WebPageTest couldn't fetch the url
             $scope.errors.push(site.URL);
@@ -142,7 +143,7 @@ angular.module('performanceApp', [])
       metrics: {
         'loadTime': { results: [], max: 0 },
         'TTFB': { results: [], max: 0 },
-        'speedIndex': { results: [], max: 0 },
+        'SpeedIndex': { results: [], max: 0 },
         'firstPaint': { results: [], max: 0 },
         'render': { results: [], max: 0 },
         'visuallyComplete': { results: [], max: 0 },
