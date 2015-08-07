@@ -25,8 +25,14 @@ form {
   font-size: 14px;
 }
 
-.accent-font {
+input {
+  background-color: white;
+}
+
+.logo {
   font-family: 'Rye', sans-serif;
+  color: black;
+  text-decoration: none;
 }
 
 .accent-color {
@@ -60,43 +66,33 @@ form {
   text-align: right;
 }
 
-.textfield {
-  width: 90%;
-  max-width: 255px;
-  padding: 5px;
-}
-
 .test-option {
   display: block;
   margin: 10px 0 5px;
 }
 
+.textfield {
+  width: 90%;
+  max-width: 210px;
+}
+
 .button {
   display: inline-block;
-  padding: 5px;
   margin: 5px 0;
-  border: 1px solid;
   font-size: 12px;
-  background-color: white;
+}
+
+.textfield,
+.button {
+  padding: 5px;
+  border: 1px solid;
+  border-radius: 0;
   -webkit-appearance: none;
-}
-
-.button:hover {
-  background-color: black;
-  border-color: black;
-  color: white;
-  opacity: 0.8;
-  cursor: pointer;
-}
-
-.button.accent-color:hover {
-  background-color: teal;
-  border-color: teal;
 }
 
 .message-container {
   display: inline-block;
-  margin-bottom: 30px;
+  margin: 0 5px 30px;
   padding: 5px 10px;
   border: 1px dashed brown;
   border-radius: 20px;
@@ -145,17 +141,55 @@ form {
   display:none;
 }
 
-.graph:hover .bar,
 .graph.show-text .bar {
   text-align: left;
 }
 
-.graph:hover .url,
 .graph.show-text .url {
   display: block;
 }
 
-.graph:hover .number,
 .graph.show-text .number {
   display: none;
+}
+
+@media (min-width: 800px) {
+  .logo:hover {
+    color: teal;
+  }
+
+  .button:hover {
+    background-color: black;
+    border-color: black;
+    color: white;
+    opacity: 0.8;
+    cursor: pointer;
+  }
+
+  .button.accent-color:hover {
+    background-color: teal;
+    border-color: teal;
+  }
+
+  .graph:hover .bar {
+    text-align: left;
+  }
+
+  .graph:hover .url {
+    display: block;
+  }
+
+  .graph:hover .number {
+    display: none;
+  }
+}
+
+@media (max-height: 400px) {
+  body {
+    padding-bottom: 0;
+  }
+
+  .footer {
+    position: static;
+  }
 }

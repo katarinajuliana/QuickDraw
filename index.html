@@ -14,7 +14,7 @@
     <link rel="icon" href="favicon.ico">
   </head>
   <body>
-    <h2 class="accent-font title">Quick Draw</h2>
+    <h2 class="title"><a href="/" class="logo">Quick Draw</a></h2>
     <h4 class="title">A webpage performance showdown.</h4>
     
     <div ng-controller="SitesCtrl" class="content">
@@ -40,6 +40,7 @@
           <div ng-repeat="url in waitingFor">Waiting for results from {{ url }}</div>
           <div ng-repeat="url in errors">WebPageTest couldn't get results for {{ url }}</div>
         </div>
+        <br>
         <div class="accent-color toggle">
           <span ng-click="showCached = false" ng-class="{'active': !showCached}" class="toggle-tab">First Time View (uncached assets)</span>
           <span ng-click="showCached = true" ng-class="{'active': showCached}"class="toggle-tab">Repeat View (cached assets)</span>
