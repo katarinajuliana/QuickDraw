@@ -132,7 +132,7 @@ angular.module('performanceApp', [])
         service.sites.push(angular.copy(siteTemplate));
         $rootScope.$broadcast('sites.update');
       },
-      testURLBase: 'http://www.webpagetest.org/runtest.php?f=json&k=A.950ee6c484b020876b5877b5195ea1bf&url='
+      testURLBase: 'http://www.webpagetest.org/runtest.php?f=json&k=A.e78488bf7cda43122909aaa6bff05e38&url='
     }
 
     return service;
