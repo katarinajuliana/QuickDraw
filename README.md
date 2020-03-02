@@ -7,6 +7,6 @@ I was given the task at work to optimize our front-end performance. There are pl
 
 There is just no way an image-heavy site is going to perform as well as a purely text site, so I found it useful to look at our performance in the context of our market. As fast as possible should still be the aim, and the industry leader still has room for improvement, but this tool can help you set reachable goals, knowing how you and your competitors are limited by the requirements (hella ads?) of your site's intention.
 
-### [Saddle Up!](http://katarinajuliana.github.io/QuickDraw/)
+### [Saddle Up!](http://quickdraw.katarina.io)
 
 __Note:__ I only spent an afternoon putting this project together, so there is MUCH room for improvement. If there is demand, I can definitely address issues and feature requests. Or feel free to open a pull request... since it's such small scale, I don't have any contribution guidelines at this point.
